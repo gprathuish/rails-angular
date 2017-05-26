@@ -1,0 +1,89 @@
+<!doctype html>
+<!--https://github.com/angular/angular.js/wiki/Understanding-Dependency-Injection-->
+<html ng-app="myApp">
+  <head>
+    <title>My AngularJS App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular.min.js"></script>
+  </head>
+  <body ng-controller="MainCtrl">
+      {{5 + 5}}
+      <button ng-click="greet()">Alert</button>
+  </body>
+
+  <script>
+    angular.module("myApp", ['recruiterServices']);
+    angular.module('myApp').config(function(greetingProvider){
+        console.log("Config");
+
+        greetingProvider.setText("From Config");
+        // $provide.provider('greeting', function(){
+        //     this.$get = function(){
+        //         return function(name){
+        //             alert(name);
+        //         }
+        //     };
+        // });
+
+        // $provide.factory('greeting', function(){
+        //     return function(name){
+        //         alert("Hello " + name)
+        //     }
+        // });
+
+        // $provide.value('greeting', function(name){
+        //     alert("Hello "+ name)
+        // });
+
+
+    })    
+    angular.module('myApp').provider('greeting', function() {
+        console.log("Provider")
+        var text = 'Hello, ';
+            
+        this.setText = function(value) {
+            text = value;
+        };
+            
+        this.$get = function() {
+            return function(name) {
+            alert(text + name);
+            };
+        };
+    })
+    angular.module('myApp').service("recService", function(){
+        console.log("service");
+        this.greet = function(){
+            alert("module");
+        }
+    })
+    angular.module('myApp').directive("mainDirective", function(){        
+        console.log("Directive");
+        return {}
+    })
+    angular.module('myApp').factory("MainFactory", function(){
+        console.log("Factory");
+        return {};
+    })
+    angular.module('myApp').controller("MainCtrl", function($scope, MainFactory, greeting, recService){
+        console.log("In controller");
+        
+        $scope.greet = function(){
+            recService.greet()
+            // greeting('prthare');    
+        }
+        
+    })
+    angular.module('myApp').run(function(greeting){
+        console.log("I am in Run");
+        // greeting("i am in run")
+    })
+
+    angular.module('recruiterServices', []);
+    angular.module('recruiterServices').service("recService", function(){
+        this.greet = function(){
+            alert("moduleNice");
+        }
+    })
+
+  </script>
+</html>
